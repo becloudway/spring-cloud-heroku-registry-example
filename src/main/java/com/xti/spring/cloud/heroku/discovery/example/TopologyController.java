@@ -38,7 +38,7 @@ public class TopologyController {
             sb.append(service).append("\n");
             List<ServiceInstance> instances = discoveryClient.getInstances(service);
             for (ServiceInstance instance : instances) {
-                sb.append(instance.getHost()).append("\n");
+                sb.append(instance.getUri().toString()).append("\n");
             }
             sb.append("\n");
         }
