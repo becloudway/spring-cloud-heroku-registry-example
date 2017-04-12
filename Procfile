@@ -1,1 +1,1 @@
-web: java $JAVA_WEB_OPTS -Dserver.port=$SPRING_CLOUD_HEROKU_PORT -jar target/*.jar
+web: java $JAVA_WEB_OPTS -Dserver.port=$PORT -jar target/*.jar
