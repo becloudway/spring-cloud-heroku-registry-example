@@ -28,4 +28,15 @@ public class NoteAggregate {
         this.id = event.getNoteId();
         this.text = event.getText();
     }
+
+    @EventSourcingHandler
+    public void on(NoteUpdatedEvent event) {
+        this.text = event.getText();
+    }
+
+    @CommandHandler
+    public void handle(UpdateNoteCommand command){
+        System.out.println("Updated note with id: " + id);
+        apply(new NoteUpdatedEvent(id, command.getText()));
+    }
 }

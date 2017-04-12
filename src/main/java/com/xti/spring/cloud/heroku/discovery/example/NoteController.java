@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.websocket.server.PathParam;
 import java.util.UUID;
 
 @RestController
@@ -21,10 +22,18 @@ public class NoteController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public CreateNoteResponse createAbnormalityCommand(@RequestBody CreateNoteRequest createNoteRequest){
+    public CreateNoteResponse createNoteRequest(@RequestBody CreateNoteRequest createNoteRequest){
         for (int i = 0; i < createNoteRequest.getCount(); i++) {
             commandGateway.sendAndWait(new CreateNoteCommand(UUID.randomUUID().toString(), createNoteRequest.getText() + i));
         }
         return new CreateNoteResponse(createNoteRequest.getCount());
+    }
+
+    @RequestMapping(path = "/{noteId}", method = RequestMethod.POST)
+    public UpdateNoteResponse updateNoteRequest(@PathParam("noteId") String noteId, @RequestBody UpdateNoteRequest updateNoteRequest){
+
+        commandGateway.sendAndWait(new UpdateNoteCommand(noteId, updateNoteRequest.getText()));
+
+        return new UpdateNoteResponse(noteId);
     }
 }
