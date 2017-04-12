@@ -10,6 +10,6 @@ public class HeartBeatChecker {
     @EventListener
     @SuppressWarnings("UnusedParameters")
     public void updateMemberships(HeartbeatEvent event) {
-        System.out.println("heartbeat");
+        //System.out.println("heartbeat");
     }
 }
