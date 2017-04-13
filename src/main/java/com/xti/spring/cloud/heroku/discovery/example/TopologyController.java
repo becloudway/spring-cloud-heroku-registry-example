@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/topology")
@@ -39,6 +40,11 @@ public class TopologyController {
             List<ServiceInstance> instances = discoveryClient.getInstances(service);
             for (ServiceInstance instance : instances) {
                 sb.append(instance.getUri().toString()).append("\n");
+                Map<String, String> metadata = instance.getMetadata();
+                for (Map.Entry<String, String> entry : metadata.entrySet()) {
+                    sb.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
+                }
+                sb.append("\n");
             }
             sb.append("\n");
         }
