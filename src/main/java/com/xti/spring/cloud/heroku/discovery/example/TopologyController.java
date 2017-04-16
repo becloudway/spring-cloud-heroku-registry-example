@@ -50,4 +50,15 @@ public class TopologyController {
         }
         return sb.toString();
     }
+
+    @RequestMapping(path = "/services", method = RequestMethod.GET)
+    public String getServices(){
+        StringBuilder sb = new StringBuilder();
+        List<String> services = discoveryClient.getServices();
+        for (String service : services) {
+            sb.append(service).append("\n");
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
 }
