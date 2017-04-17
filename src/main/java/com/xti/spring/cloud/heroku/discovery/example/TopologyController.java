@@ -40,9 +40,11 @@ public class TopologyController {
         StringBuilder sb = new StringBuilder();
         List<String> services = discoveryClient.getServices();
         for (String service : services) {
+            System.out.println(service);
             sb.append(service).append("\n");
             List<ServiceInstance> instances = discoveryClient.getInstances(service);
             for (ServiceInstance instance : instances) {
+                System.out.println(instance.getUri().toString());
                 sb.append(instance.getUri().toString()).append("\n");
                 Map<String, String> metadata = instance.getMetadata();
                 for (Map.Entry<String, String> entry : metadata.entrySet()) {
