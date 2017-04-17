@@ -1,5 +1,6 @@
 package com.xti.spring.cloud.heroku.discovery.example;
 
+import com.xti.spring.cloud.heroku.discovery.HerokuSpaceTopologyWatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -19,6 +20,9 @@ public class TopologyController {
 
     @Autowired
     private DiscoveryClient discoveryClient;
+
+    @Autowired
+    private HerokuSpaceTopologyWatcher watcher;
 
     @RequestMapping(path = "/file", method = RequestMethod.GET)
     public String getSpaceTopology(){
@@ -60,5 +64,10 @@ public class TopologyController {
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    @RequestMapping(path = "/watcher", method = RequestMethod.GET)
+    public String getWatcherTopology(){
+        return watcher.getTopology().toString();
     }
 }
