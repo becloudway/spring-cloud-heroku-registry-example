@@ -1,0 +1,4 @@
+helloworldclient:
+  ribbon:
+    eureka:
+      enabled: false

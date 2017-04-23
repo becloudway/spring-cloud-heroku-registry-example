@@ -1,5 +1,7 @@
 package com.xti.spring.cloud.heroku.discovery.example;
 
+import com.netflix.client.config.DefaultClientConfigImpl;
+import com.netflix.client.config.IClientConfig;
 import org.apache.catalina.connector.Connector;
 import org.apache.commons.lang3.StringUtils;
 import org.axonframework.commandhandling.CommandBus;
@@ -26,6 +28,7 @@ import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -90,10 +93,6 @@ public class DistributedAxonConfig {
         return localSegment;
     }
 
-    @Bean RestTemplate restTemplate(){
-        return new RestTemplate();
-    }
-
     @Bean
     public CommandRouter springCloudCommandRouter(DiscoveryClient discoveryClient) {
         return new SpringCloudCommandRouter(discoveryClient, new AnnotationRoutingStrategy());
@@ -121,5 +120,18 @@ public class DistributedAxonConfig {
     @Bean
     public Repository<NoteAggregate> noteCommandRepository()  {
         return new EventSourcingRepository<NoteAggregate>(NoteAggregate.class, eventStore());
+    }
+
+
+    @Bean
+    IClientConfig iClientConfig(){
+        return new DefaultClientConfigImpl();
+    }
+
+
+    @LoadBalanced
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }
