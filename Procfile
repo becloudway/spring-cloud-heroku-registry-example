@@ -1,1 +1,1 @@
-web: java $JAVA_WEB_OPTS -Dserver.port=$PORT -Dserver.additionalPorts=8080 -jar target/*.jar
+web: java $JAVA_WEB_OPTS -Dserver.port=$PORT -Dserver.additionalPorts=8080 -Dribbon.client.name=helloworldclient -jar target/*.jar
