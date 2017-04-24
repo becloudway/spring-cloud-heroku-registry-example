@@ -1,9 +1,6 @@
 package com.xti.spring.cloud.heroku.discovery.example;
 
-import com.netflix.client.config.DefaultClientConfigImpl;
-import com.netflix.client.config.IClientConfig;
 import org.apache.catalina.connector.Connector;
-import org.apache.commons.lang3.StringUtils;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.commandhandling.distributed.AnnotationRoutingStrategy;
@@ -24,6 +21,7 @@ import org.axonframework.springcloud.commandhandling.SpringCloudCommandRouter;
 import org.axonframework.springcloud.commandhandling.SpringHttpCommandBusConnector;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -35,51 +33,22 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 @Configuration
 @EnableDiscoveryClient
+@EnableAutoConfiguration
 public class DistributedAxonConfig {
 
-    @Value("${server.port}")
-    private String serverPort;
-
-    @Value("${management.port:${server.port}}")
-    private String managementPort;
-
-    @Value("${server.additionalPorts:null}")
-    private String additionalPorts;
+    @Value("${SPRING_CLOUD_HEROKU_PORT:8080}")
+    private String springCloudHerokuPort;
 
     @Bean
     public EmbeddedServletContainerFactory servletContainer() {
         TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
-        Connector[] additionalConnectors = this.additionalConnector();
-        if (additionalConnectors != null && additionalConnectors.length > 0) {
-            tomcat.addAdditionalTomcatConnectors(additionalConnectors);
-        }
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setScheme("http");
+        connector.setPort(Integer.valueOf(springCloudHerokuPort));
+        tomcat.addAdditionalTomcatConnectors(connector);
         return tomcat;
-    }
-
-    private Connector[] additionalConnector() {
-        if (StringUtils.isBlank(this.additionalPorts)) {
-            return null;
-        }
-        Set<String> defaultPorts = new HashSet<>(Arrays.asList(this.serverPort, this.managementPort));
-        String[] ports = this.additionalPorts.split(",");
-        List<Connector> result = new ArrayList<>();
-        for (String port : ports) {
-            if (!defaultPorts.contains(port)) {
-                Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-                connector.setScheme("http");
-                connector.setPort(Integer.valueOf(port));
-                result.add(connector);
-            }
-        }
-        return result.toArray(new Connector[result.size()]);
     }
 
     @Qualifier("localSegment")
@@ -121,13 +90,6 @@ public class DistributedAxonConfig {
     public Repository<NoteAggregate> noteCommandRepository()  {
         return new EventSourcingRepository<NoteAggregate>(NoteAggregate.class, eventStore());
     }
-
-
-    @Bean
-    IClientConfig iClientConfig(){
-        return new DefaultClientConfigImpl();
-    }
-
 
     @LoadBalanced
     @Bean
