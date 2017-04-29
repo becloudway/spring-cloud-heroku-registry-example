@@ -1,6 +1,6 @@
 package com.xti.spring.cloud.heroku.discovery.example;
 
-import com.xti.spring.cloud.heroku.discovery.HerokuSpaceTopologyWatcher;
+import com.xti.spring.cloud.heroku.discovery.topology.HerokuSpaceTopologyWatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
