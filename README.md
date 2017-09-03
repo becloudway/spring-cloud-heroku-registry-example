@@ -1,7 +1,7 @@
 # [spring-cloud-heroku-registry](https://github.com/XT-i/spring-cloud-heroku-registry)
 
 ## Example
-Maven project demonstrating clustered behaviour together with Axon framework 3.0.3.
+Maven project demonstrating clustered behaviour together with Axon framework 3.0.3 on Heroku Private Spaces.
 
 ### Prerequisites (Local Setup):
 #### Additional loopback address
