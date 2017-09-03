@@ -11,4 +11,8 @@
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
+
+    <logger name="com.xti.spring.cloud.heroku.discovery.metadata.MetadataController" additivity="false" level="TRACE">
+        <appender-ref ref="STDOUT" />
+    </logger>
 </configuration>
